@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatAI Ollama</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.16.2/styles/atom-one-dark.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.8/lottie.min.js"></script>
+  <link rel="stylesheet" href="./assets/css/main.css" />
+</head>
+<body>
+  <div class="container flex flex-col mx-auto p-4 relative lg:min-h-screen">
+    <div class="text-2xl font-bold mb-4 flex md:flex-row sm:flex-col">
+      <h3 class="text-2xl font-bold">ChatAI • Ollama</h3>
+      <select id="model-select" class="bg-gray-800 text-white px-4 py-1 rounded-lg ml-auto"></select>
+      <button id="config-btn" class="bg-gray-800 text-white px-4 py-1 rounded-lg ml-2">
+        <i class="fas fa-cog"></i>
+      </button>
+    </div>
+    <div class="bg-gray-800 p-4 border border-gray-700 rounded mb-3" id="chat-container">
+      <div id="response"></div>
+    </div>
+    <button id="scrollDown" class="absolute animate-bounce bottom-16 right-4 left-0 mx-auto rounded-full w-10 bg-blue-500 p-2 text-white shadow-lg hover:bg-blue-700 hidden">
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <form id="completion-form" class="flex gap-2 fixed-bottom content-start items-start mt-auto">
+      <button id="reset-btn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hidden">
+        <i class="fas fa-broom"></i>
+      </button>
+      <textarea id="prompt" name="prompt" class="w-full p-2 border rounded resize-y" rows="1" placeholder="Enter your prompt here"></textarea>
+      <button type="submit" id="generate-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </form>
+  </div>
+  <div id="config-modal" class="bg-slate-900 fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 p-4 rounded-lg lg:w-4/12 md:w-11/12">
+      <h3 class="text-lg font-bold mb-4">Settings</h3>
+      <div class="mb-4">
+        <label for="system-prompt" class="block mb-2">System Prompt:</label>
+        <small class="text-xs text-gray-400 mb-1">System prompt, and attached on all user questions.</small>
+        <textarea id="system-prompt" class="w-full p-2 border rounded resize-y" rows="3"></textarea>
+      </div>
+      <div class="mb-4">
+        <label for="temperature" class="block mb-2">Temperature: <span id="temperature-value"></span></label>
+        <small class="text-xs text-gray-400 mb-1">Controls the 'temperature' of the model, affecting how creative the output will be.</small>
+        <input type="range" id="temperature" class="w-full" min="0" max="1" step="0.1" value="0.7">
+      </div>
+      <div class="mb-4">
+        <label for="num-predict" class="block mb-2">Number of tokens:</label>
+        <small class="text-xs text-gray-400 mb-1">Define the maximum number of tokens to be generated.</small>
+        <input type="number" id="num-predict" class="w-full p-2 border rounded" value="128">
+      </div>
+      <div class="mb-4">
+        <label for="top-k" class="block mb-2">Top_k:</label>
+        <small class="text-xs text-gray-400 mb-1">Reduces the probability of generating nonsensical output by controlling diversity.</small>
+        <input type="number" id="top-k" class="w-full p-2 border rounded" value="40">
+      </div>
+      <div class="mb-4">
+        <label for="top-p" class="block mb-2">Top_p: <span id="top-p-value"></span></label>
+        <small class="text-xs text-gray-400 mb-1">Works in conjunction with top-k, controlling the balance between diversity and focus in the output.</small>
+        <input type="range" id="top-p" class="w-full" min="0" max="1" step="0.1" value="0.9">
+      </div>
+      <div class="flex justify-end">
+        <button id="save-config" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Save</button>
+        <button id="cancel-config" class="bg-gray-500 text-white px-4 py-2 rounded-lg ml-2">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+  <script src="https://clipboardjs.com/dist/clipboard.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="./assets/js/powAlert.js"></script>
+  <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/config.js"></script>
+  <script>
+    var clipboard = new ClipboardJS('.copy-code', {
+      target: (trigger) => {
+        var codeElement = trigger.parentNode.querySelector('code');
+        return codeElement? codeElement : null;
+      }
+    });
+
+    clipboard.on('success', function(e) {
+      powAlert({ color: 'success', title: 'Copied!', text: 'Copied to the clipboard!', position: 'topRight' });
+      e.clearSelection();
+    });
+  </script>
+</body>
+</html>
