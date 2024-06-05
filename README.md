@@ -1,7 +1,6 @@
 # ChatAI Ollama
-================
 
-![Example](assets/my-logo.svg)
+![Example](https://raw.githubusercontent.com/HellFiveOsborn/chatai_ollama/main/public/assets/img/example_chat.png)
 
 A simple chat interface for Ollama AI model, designed to be used on mobile devices.
 
